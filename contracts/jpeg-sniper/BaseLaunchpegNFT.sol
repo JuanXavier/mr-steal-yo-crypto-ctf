@@ -6,10 +6,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./LaunchpegErrors.sol";
 
-
 /// @dev base NFT contract
 contract BaseLaunchpegNFT is ERC721, Ownable {
-
     using Counters for Counters.Counter;
     Counters.Counter private _tokenId;
 
@@ -22,11 +20,9 @@ contract BaseLaunchpegNFT is ERC721, Ownable {
     modifier isEOA() {
         uint256 size;
         address sender = msg.sender;
-
         assembly {
             size := extcodesize(sender)
         }
-
         if (size > 0) revert Launchpeg__Unauthorized();
         _;
     }
@@ -35,7 +31,7 @@ contract BaseLaunchpegNFT is ERC721, Ownable {
         uint256 _collectionSize,
         uint256 _maxBatchSize,
         uint256 _maxPerAddressDuringMint
-    ) ERC721('BOOTY','BOOTY') {
+    ) ERC721("BOOTY", "BOOTY") {
         collectionSize = _collectionSize;
         maxBatchSize = _maxBatchSize;
         maxPerAddressDuringMint = _maxPerAddressDuringMint;
@@ -45,11 +41,7 @@ contract BaseLaunchpegNFT is ERC721, Ownable {
     /// @notice Returns the number of NFTs minted by a specific address
     /// @param _owner The owner of the NFTs
     /// @return numberMinted Number of NFTs minted
-    function numberMinted(address _owner)
-        public
-        view
-        returns (uint256)
-    {
+    function numberMinted(address _owner) public view returns (uint256) {
         return balanceOf(_owner);
     }
 
@@ -60,7 +52,7 @@ contract BaseLaunchpegNFT is ERC721, Ownable {
 
     /// @dev mints n number of NFTs per user
     function _mintForUser(address to, uint256 quantity) internal {
-        for (uint256 i=0; i<quantity; i++) {
+        for (uint256 i = 0; i < quantity; i++) {
             _mint(to, _tokenId.current());
             _tokenId.increment();
         }
@@ -72,12 +64,12 @@ contract BaseLaunchpegNFT is ERC721, Ownable {
         if (msg.value < _price) {
             revert Launchpeg__NotEnoughFunds(msg.value);
         }
+
         if (msg.value > _price) {
-            (bool success, ) = msg.sender.call{value: msg.value - _price}("");
+            (bool success, ) = msg.sender.call{ value: msg.value - _price }("");
             if (!success) {
                 revert Launchpeg__TransferFailed();
             }
         }
     }
-
 }
