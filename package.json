@@ -12,7 +12,7 @@
     "hardhat": "^2.12.1"
   },
   "scripts": {
-    "sniper": "npx hardhat test /test/1-jpeg-sniper.ts"
+    "sniper": "npx hardhat test ./test/1-jpeg-sniper.ts"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.7",
