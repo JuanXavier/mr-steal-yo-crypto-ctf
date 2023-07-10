@@ -16,6 +16,7 @@ contract SniperAttack {
             // First 65 NFTs go in this loop (13* 5)
             for (uint256 i; i < 13; ++i) {
                 flat.publicSaleMint(5);
+
                 for (uint256 j; j < 5; ++j) {
                     flat.transferFrom(address(this), msg.sender, id);
                     ++id;

@@ -52,7 +52,6 @@ contract SafuStrategy is Ownable, Pausable {
     /// @param _amount How much {want} to withdraw.
     function withdraw(uint256 _amount) external {
         require(msg.sender == vault, "not vault");
-
         uint256 wantBal = IERC20(want).balanceOf(address(this));
 
         if (wantBal < _amount) {
@@ -60,11 +59,7 @@ contract SafuStrategy is Ownable, Pausable {
             // ...
             wantBal = IERC20(want).balanceOf(address(this));
         }
-
-        if (wantBal > _amount) {
-            wantBal = _amount;
-        }
-
+        if (wantBal > _amount) wantBal = _amount;
         IERC20(want).safeTransfer(vault, wantBal);
     }
 

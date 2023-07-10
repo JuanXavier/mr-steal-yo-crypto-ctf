@@ -27,11 +27,7 @@ contract SafuVault is ERC20, Ownable, ReentrancyGuard {
     // The strategy currently in use by the vault.
     IStrategy public strategy;
 
-    constructor(
-        IStrategy _strategy,
-        string memory _name,
-        string memory _symbol
-    ) ERC20(_name, _symbol) {
+    constructor(IStrategy _strategy, string memory _name, string memory _symbol) ERC20(_name, _symbol) {
         strategy = IStrategy(_strategy);
     }
 
@@ -59,19 +55,14 @@ contract SafuVault is ERC20, Ownable, ReentrancyGuard {
     /// @dev people deposit with this function into the vault
     function deposit(uint256 _amount) public nonReentrant {
         strategy.beforeDeposit();
-
         uint256 _pool = balance();
         want().safeTransferFrom(msg.sender, address(this), _amount);
         earn();
         uint256 _after = balance();
         _amount = _after - _pool; // Additional check for deflationary tokens
-
         uint256 shares;
-        if (totalSupply() == 0) {
-            shares = _amount;
-        } else {
-            shares = (_amount * totalSupply()) / (_pool);
-        }
+        if (totalSupply() == 0) shares = _amount;
+        else shares = (_amount * totalSupply()) / (_pool);
         _mint(msg.sender, shares);
     }
 
@@ -108,11 +99,7 @@ contract SafuVault is ERC20, Ownable, ReentrancyGuard {
     }
 
     /// @dev deposit funds into the system for other user
-    function depositFor(
-        address token,
-        uint256 _amount,
-        address user
-    ) public {
+    function depositFor(address token, uint256 _amount, address user) public {
         strategy.beforeDeposit();
 
         uint256 _pool = balance();
